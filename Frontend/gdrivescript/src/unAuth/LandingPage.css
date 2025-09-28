@@ -14,6 +14,10 @@
   margin-bottom: 40px;
 }
 
+.logo img {
+  width: 300px;
+}
+
 .upload-box {
   border: 2px dashed #ccc;
   border-radius: 10px;
@@ -25,7 +29,7 @@
 }
 
 .upload-box img {
-  width: 120px;
+  width: 180px;
   margin-bottom: 20px;
 }
 

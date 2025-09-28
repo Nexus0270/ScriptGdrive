@@ -1,35 +1,100 @@
-
 .settings-page {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  padding: 30px;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  min-height: 100vh;
 }
 
-.setting-item {
-  margin-bottom: 15px;
+.settings-header {
   display: flex;
   align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
-.setting-item label {
-  margin-right: 10px;
-  width: 100px;
+.settings-header img {
+  height: 180px;
 }
 
-.setting-item button {
-  margin: 0 5px;
+.settings-header h2 {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
 }
 
-.confirm-button {
-  margin-top: 20px;
-  padding: 10px 20px;
-  background-color: #4CAF50;
-  color: white;
+.settings-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  width: 280px;
+}
+
+.settings-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.settings-actions button {
   border: none;
+  background: none;
+  font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
 }
 
-.confirm-button:hover {
-  background-color: #45a049;
+.settings-actions .cancel {
+  color: #7a2be2;
+}
+
+.settings-actions .print {
+  background: linear-gradient(to right, #00c6ff, #0072ff);
+  color: white;
+  padding: 6px 16px;
+  border-radius: 6px;
+}
+
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+.setting-row:last-child {
+  border-bottom: none;
+}
+
+.setting-label {
+  color: #555;
+}
+
+.setting-value {
+  color: #333;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.copies-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.copies-control button {
+  background: #f0f0f0;
+  border: none;
+  width: 28px;
+  height: 28px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
 }

@@ -29,7 +29,7 @@ const LandingPage = () => {
     <div className="landing-page">
       {/* Logo */}
       <div className="logo">
-        <img src={PaperPopLogo} alt="PaperPop Logo" width="200" />
+        <img src={PaperPopLogo} alt="PaperPop Logo" />
       </div>
 
       {/* Upload Box */}
