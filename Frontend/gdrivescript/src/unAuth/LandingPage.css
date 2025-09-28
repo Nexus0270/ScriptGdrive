@@ -1,47 +1,84 @@
-
 .landing-page {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  height: 100vh;
-  background-color: #f0f2f5;
+  min-height: 100vh;
+  background-color: #ffffff;
   font-family: sans-serif;
+  padding: 20px;
 }
 
-.upload-container {
-  background-color: white;
-  padding: 40px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-
-h2 {
-  margin-bottom: 20px;
-  color: #333;
-}
-
-input[type="file"] {
-  margin-bottom: 20px;
-}
-
-.upload-button {
-  padding: 15px 30px;
-  font-size: 1.2rem;
-  cursor: pointer;
-  background-color: #4285F4;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  transition: background-color 0.3s;
-}
-
-.upload-button:hover {
-  background-color: #3367D6;
-}
-
-.upload-status {
+.logo {
   margin-top: 20px;
-  font-size: 1rem;
+  margin-bottom: 40px;
+}
+
+.upload-box {
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  padding: 40px 60px;
+  text-align: center;
+  background-color: #fafafa;
+  max-width: 400px;
+  width: 100%;
+}
+
+.upload-box img {
+  width: 120px;
+  margin-bottom: 20px;
+}
+
+.upload-text {
+  font-size: 1.2rem;
+  font-weight: bold;
   color: #333;
+  margin-bottom: 10px;
+}
+
+.support-text {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.choose-button {
+  display: inline-block;
+  padding: 12px 25px;
+  background: linear-gradient(to right, #4facfe, #00f2fe);
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.choose-button:hover {
+  opacity: 0.9;
+}
+
+.private-text {
+  font-size: 0.8rem;
+  color: #888;
+  margin-top: 10px;
+}
+
+.footer {
+  margin-top: auto;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #555;
+  padding-bottom: 20px;
+}
+
+.footer a {
+  color: #555;
+  text-decoration: none;
+  margin: 0 5px;
+}
+
+.footer a:hover {
+  text-decoration: underline;
 }

@@ -1,83 +1,69 @@
-
-
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import './LandingPage.css';
+import PaperPopLogo from '../img/PaperPopLogo.png';
+import Book from '../img/book.png';
+import { FileContext } from '../contexts/FileContext';
 
 const LandingPage = () => {
-  const [selectedFile, setSelectedFile] = useState(null);
   const [uploadStatus, setUploadStatus] = useState('');
+  const { setSelectedFile } = useContext(FileContext);
   const navigate = useNavigate();
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    if (!file) {
-      return;
-    }
+    if (!file) return;
 
     const allowedExtensions = /(\.doc|\.docx|\.pdf)$/i;
     if (!allowedExtensions.exec(file.name)) {
       setUploadStatus('Invalid file type. Please select a .doc, .docx, or .pdf file.');
       event.target.value = '';
-      setSelectedFile(null);
       return;
     }
 
     setSelectedFile(file);
-    setUploadStatus('');
-  };
-
-  const handleUpload = async () => {
-    if (!selectedFile) {
-      setUploadStatus('Please select a file first.');
-      return;
-    }
-
-    setUploadStatus('Uploading...');
-
-    const reader = new FileReader();
-    reader.readAsDataURL(selectedFile);
-    reader.onload = async () => {
-      try {
-        const response = await axios.post('http://localhost:3001/upload', {
-          file: reader.result,
-          fileName: selectedFile.name,
-          contentType: selectedFile.type,
-          // You can also pass a folderId here if you want to override the default
-          // folderId: 'YOUR_SPECIFIC_FOLDER_ID' 
-        });
-
-        if (response.data.status === 'success') {
-          setUploadStatus(`File uploaded successfully! File ID: ${response.data.fileId}`);
-          navigate('/settings');
-        } else {
-          setUploadStatus(`Upload failed: ${response.data.message}`);
-        }
-      } catch (error) {
-        console.error('Error uploading file:', error);
-        setUploadStatus('Upload failed. See console for details.');
-      }
-    };
-    reader.onerror = (error) => {
-      console.error('Error reading file:', error);
-      setUploadStatus('Error reading file.');
-    };
+    navigate('/settings');
   };
 
   return (
     <div className="landing-page">
-      <div className="upload-container">
-        <h2>Upload a File to Google Drive</h2>
-        <input type="file" onChange={handleFileChange} accept=".doc,.docx,.pdf" />
-        <button className="upload-button" onClick={handleUpload}>
-          Upload to Google Drive
+      {/* Logo */}
+      <div className="logo">
+        <img src={PaperPopLogo} alt="PaperPop Logo" width="200" />
+      </div>
+
+      {/* Upload Box */}
+      <div className="upload-box">
+        <img src={Book} alt="Books" />
+        <p className="upload-text">Drop file here to start</p>
+        <p className="support-text">Supports files (DOC, DOCX, PDF)</p>
+
+        <input
+          type="file"
+          id="fileInput"
+          style={{ display: 'none' }}
+          onChange={handleFileChange}
+          accept=".doc,.docx,.pdf"
+        />
+        <button
+          className="choose-button"
+          onClick={() => document.getElementById('fileInput').click()}
+        >
+          Choose file
         </button>
+
+        <p className="private-text">🔒 Files stay private</p>
         {uploadStatus && <p className="upload-status">{uploadStatus}</p>}
+      </div>
+
+      {/* Footer */}
+      <div className="footer">
+        <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
+        <br />
+        © 2025 PaperPOP. All rights reserved
       </div>
     </div>
   );
 };
 
 export default LandingPage;
-

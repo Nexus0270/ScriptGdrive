@@ -1,10 +1,12 @@
 
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import jsPDF from 'jspdf';
 import axios from 'axios';
 import './SettingsPage.css';
+import { FileContext } from '../contexts/FileContext';
 
 const SettingsPage = () => {
+  const { selectedFile } = useContext(FileContext);
   const [copies, setCopies] = useState(1);
   const [pageRange, setPageRange] = useState('All');
   const [pageSize, setPageSize] = useState('A4');
@@ -14,9 +16,37 @@ const SettingsPage = () => {
   const [scale, setScale] = useState('NoScale');
   const [uploadStatus, setUploadStatus] = useState('');
 
-  const handleConfirm = async () => {
-    const doc = new jsPDF();
+  const uploadFile = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = async () => {
+        try {
+          const response = await axios.post('http://localhost:3001/upload', {
+            file: reader.result,
+            fileName: file.name,
+            contentType: file.type,
+          });
+          resolve(response.data);
+        } catch (error) {
+          reject(error);
+        }
+      };
+      reader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
 
+  const handleConfirm = async () => {
+    if (!selectedFile) {
+      setUploadStatus('No file selected. Please go back and select a file.');
+      return;
+    }
+
+    setUploadStatus('Uploading files...');
+
+    const doc = new jsPDF();
     doc.text('PDF Settings', 10, 10);
     doc.text(`Copies: ${copies}`, 10, 20);
     doc.text(`Page Range: ${pageRange}`, 10, 30);
@@ -26,24 +56,31 @@ const SettingsPage = () => {
     doc.text(`Duplex: ${duplex}`, 10, 70);
     doc.text(`Scale: ${scale}`, 10, 80);
 
-    const pdfData = doc.output('datauristring');
-
-    setUploadStatus('Uploading PDF...');
+    const settingsPdfData = doc.output('blob');
+    const settingsFile = new File([settingsPdfData], 'settings.pdf', { type: 'application/pdf' });
 
     try {
-      const response = await axios.post('http://localhost:3001/upload', {
-        file: pdfData,
-        fileName: 'settings.pdf',
-        contentType: 'application/pdf',
-      });
+      const [originalFileUpload, settingsFileUpload] = await Promise.all([
+        uploadFile(selectedFile),
+        uploadFile(settingsFile),
+      ]);
 
-      if (response.data.status === 'success') {
-        setUploadStatus(`PDF uploaded successfully! File ID: ${response.data.fileId}`);
+      let statusMessage = '';
+      if (originalFileUpload.status === 'success') {
+        statusMessage += `Original file uploaded successfully! File ID: ${originalFileUpload.fileId}\n`;
       } else {
-        setUploadStatus(`Upload failed: ${response.data.message}`);
+        statusMessage += `Original file upload failed: ${originalFileUpload.message}\n`;
       }
+
+      if (settingsFileUpload.status === 'success') {
+        statusMessage += `Settings PDF uploaded successfully! File ID: ${settingsFileUpload.fileId}`;
+      } else {
+        statusMessage += `Settings PDF upload failed: ${settingsFileUpload.message}`;
+      }
+
+      setUploadStatus(statusMessage);
     } catch (error) {
-      console.error('Error uploading file:', error);
+      console.error('Error uploading files:', error);
       setUploadStatus('Upload failed. See console for details.');
     }
   };
@@ -51,6 +88,7 @@ const SettingsPage = () => {
   return (
     <div className="settings-page">
       <h2>PDF Settings</h2>
+      {selectedFile && <p>Selected file: {selectedFile.name}</p>}
       <div className="setting-item">
         <label>Copies:</label>
         <button onClick={() => setCopies(c => Math.max(1, c - 1))}>-</button>
