@@ -1,14 +1,30 @@
 
+
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './LandingPage.css';
 
 const LandingPage = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadStatus, setUploadStatus] = useState('');
+  const navigate = useNavigate();
 
   const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
+    const file = event.target.files[0];
+    if (!file) {
+      return;
+    }
+
+    const allowedExtensions = /(\.doc|\.docx|\.pdf)$/i;
+    if (!allowedExtensions.exec(file.name)) {
+      setUploadStatus('Invalid file type. Please select a .doc, .docx, or .pdf file.');
+      event.target.value = '';
+      setSelectedFile(null);
+      return;
+    }
+
+    setSelectedFile(file);
     setUploadStatus('');
   };
 
@@ -34,6 +50,7 @@ const LandingPage = () => {
 
         if (response.data.status === 'success') {
           setUploadStatus(`File uploaded successfully! File ID: ${response.data.fileId}`);
+          navigate('/settings');
         } else {
           setUploadStatus(`Upload failed: ${response.data.message}`);
         }
@@ -52,7 +69,7 @@ const LandingPage = () => {
     <div className="landing-page">
       <div className="upload-container">
         <h2>Upload a File to Google Drive</h2>
-        <input type="file" onChange={handleFileChange} />
+        <input type="file" onChange={handleFileChange} accept=".doc,.docx,.pdf" />
         <button className="upload-button" onClick={handleUpload}>
           Upload to Google Drive
         </button>
@@ -63,3 +80,4 @@ const LandingPage = () => {
 };
 
 export default LandingPage;
+
